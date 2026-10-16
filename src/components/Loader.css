@@ -1,0 +1,25 @@
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  cursor: wait;
+}
+
+.loader-spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: loader-girar 0.8s linear infinite;
+}
+
+@keyframes loader-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

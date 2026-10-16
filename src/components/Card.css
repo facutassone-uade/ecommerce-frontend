@@ -1,0 +1,49 @@
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  width: 200px;
+  text-align: left;
+}
+
+.card h3 {
+  margin: 8px 0;
+}
+
+.card-categoria {
+  font-size: 12px;
+  color: #888;
+}
+
+.card-precio {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.card-stock {
+  color: green;
+}
+
+.card-stock.sin-stock {
+  color: red;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.card-envio {
+  color: #00a650;
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.card-internacional {
+  color: #3483fa;
+  font-size: 14px;
+  margin: 4px 0;
+}
