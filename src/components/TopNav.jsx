@@ -3,8 +3,11 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Search, ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "../hooks/useAuth.js";
+import UserMenu from "./UserMenu.jsx";
 
 function TopNav() {
+  const { usuario } = useAuth();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [busqueda, setBusqueda] = useState(params.get("q") ?? "");
@@ -40,12 +43,18 @@ function TopNav() {
           <Button variant="ghost" size="icon-lg" aria-label="Carrito">
             <ShoppingCart className="size-5" />
           </Button>
-          <Button variant="outline" size="lg" className="hidden md:inline-flex">
-            Ingresar
-          </Button>
-          <Button size="lg" className="hidden md:inline-flex">
-            Crear cuenta
-          </Button>
+          {usuario ? (
+            <UserMenu />
+          ) : (
+            <>
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/login">Ingresar</Link>
+              </Button>
+              <Button size="lg" className="hidden md:inline-flex" asChild>
+                <Link to="/registro">Crear cuenta</Link>
+              </Button>
+            </>
+          )}
         </nav>
       </div>
     </header>

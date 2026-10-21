@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ImageIcon, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -17,10 +17,13 @@ import EmptyState from "../components/EmptyState.jsx";
 import ErrorAlert from "../components/ErrorAlert.jsx";
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton.jsx";
 import QuantitySelector from "../components/QuantitySelector.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 import { getProductoById } from "../services/productsService.js";
 
 function ProductoDetalle() {
   const { id } = useParams();
+  const { usuario } = useAuth();
+  const location = useLocation();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -133,7 +136,18 @@ function ProductoDetalle() {
           {aviso && (
             <Alert>
               <Info />
-              <AlertDescription>Iniciá sesión para agregar productos al carrito.</AlertDescription>
+              <AlertDescription>
+                {usuario ? (
+                  "El carrito todavía no está conectado."
+                ) : (
+                  <span>
+                    <Link to="/login" state={{ desde: location.pathname }}>
+                      Iniciá sesión
+                    </Link>{" "}
+                    para agregar productos al carrito.
+                  </span>
+                )}
+              </AlertDescription>
             </Alert>
           )}
         </div>
