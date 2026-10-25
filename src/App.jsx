@@ -1,10 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+﻿import { Routes, Route } from "react-router-dom";
 import TopNav from "./components/TopNav.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Registro from "./pages/Registro.jsx";
 import ProductoDetalle from "./pages/ProductoDetalle.jsx";
-import Productos from "./pages/Productos.jsx";
+import Products from "./pages/Products.jsx";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
       <TopNav />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Productos />} />
+        <Route path="/productos" element={<Products />} />
         <Route path="/productos/:id" element={<ProductoDetalle />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />

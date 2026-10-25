@@ -104,7 +104,7 @@ function ProductoDetalle() {
           {sinStock ? (
             <Badge variant="destructive">Sin stock</Badge>
           ) : (
-            <Badge className="bg-green-100 text-green-700">
+            <Badge variant="success">
               En stock · {producto.stock} {producto.stock === 1 ? "unidad" : "unidades"}
             </Badge>
           )}

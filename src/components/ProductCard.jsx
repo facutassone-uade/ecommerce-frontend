@@ -39,7 +39,7 @@ function ProductCard({ to, nombre, descripcion, precio, stock, categorias = [], 
         {sinStock ? (
           <Badge variant="destructive">Sin stock</Badge>
         ) : (
-          <Badge className="bg-green-100 text-green-700">Stock: {stock}</Badge>
+          <Badge variant="success">Stock: {stock}</Badge>
         )}
       </CardContent>
 
