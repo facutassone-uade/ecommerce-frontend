@@ -83,9 +83,12 @@ function ProductoDetalle() {
     return (
       <div className="grid gap-8 md:grid-cols-2 md:gap-12">
         <div className="flex flex-col gap-3">
-          {/* El back todavía no expone imageUrl: placeholder hasta que se agregue */}
-          <div className="flex aspect-[4/3] items-center justify-center rounded-xl bg-muted text-muted-foreground">
-            <ImageIcon className="size-16" />
+          <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl bg-muted text-muted-foreground">
+            {producto.imageUrl ? (
+              <img src={producto.imageUrl} alt={producto.name} className="size-full object-cover" />
+            ) : (
+              <ImageIcon className="size-16" />
+            )}
           </div>
         </div>
 
@@ -123,11 +126,11 @@ function ProductoDetalle() {
               <span className="text-sm font-medium">Cantidad</span>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <QuantitySelector cantidad={cantidad} max={producto.stock} onCambiar={setCantidad} />
-                <Button size="lg" className="h-10 flex-1" onClick={agregarAlCarrito}>
+                <Button size="lg" className="h-10 w-full cursor-pointer sm:w-auto sm:flex-1" onClick={agregarAlCarrito}>
                   Agregar al carrito
                 </Button>
               </div>
-              <Button variant="outline" size="lg" className="h-10" onClick={agregarAlCarrito}>
+              <Button variant="outline" size="lg" className="h-10 w-full sm:w-auto" onClick={agregarAlCarrito}>
                 Comprar ahora
               </Button>
             </div>
@@ -169,7 +172,13 @@ function ProductoDetalle() {
               {producto.categories[0] && (
                 <>
                   <BreadcrumbSeparator />
-                  <BreadcrumbItem>{producto.categories[0].name}</BreadcrumbItem>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to={`/?categoria=${producto.categories[0].id}`}>
+                        {producto.categories[0].name}
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
                 </>
               )}
               <BreadcrumbSeparator />

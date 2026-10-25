@@ -4,17 +4,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-function ProductCard({ to, nombre, descripcion, precio, stock, categorias = [], onAgregar }) {
+function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, categorias = [], onAgregar }) {
   const sinStock = stock === 0;
 
   return (
     <Card className="gap-0 overflow-hidden py-0">
-      {/* El back todavía no expone imageUrl: placeholder hasta que se agregue */}
       <Link
         to={to}
-        className="flex aspect-[4/3] items-center justify-center bg-muted text-muted-foreground"
+        className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-muted text-muted-foreground"
       >
-        <ImageIcon className="size-10" />
+        {imagenUrl ? (
+          <img src={imagenUrl} alt={nombre} loading="lazy" className="size-full object-cover" />
+        ) : (
+          <ImageIcon className="size-10" />
+        )}
       </Link>
 
       <CardContent className="flex flex-1 flex-col gap-2 p-4">
@@ -43,8 +46,11 @@ function ProductCard({ to, nombre, descripcion, precio, stock, categorias = [], 
         )}
       </CardContent>
 
-      <CardFooter className="border-t-0 bg-transparent p-4 pt-0">
-        <Button size="lg" className="w-full" disabled={sinStock} onClick={onAgregar}>
+      <CardFooter className="flex-wrap gap-2 border-t-0 bg-transparent p-4 pt-0">
+        <Button variant="outline" size="lg" className="flex-1" asChild>
+          <Link to={to}>Ver detalle</Link>
+        </Button>
+        <Button size="lg" className="flex-1 cursor-pointer" disabled={sinStock} onClick={onAgregar}>
           Agregar al carrito
         </Button>
       </CardFooter>

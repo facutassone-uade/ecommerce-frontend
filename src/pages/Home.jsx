@@ -17,7 +17,9 @@ function Home() {
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [categoriaId, setCategoriaId] = useState(null);
+  const [categoriaId, setCategoriaId] = useState(
+    params.get("categoria") ? Number(params.get("categoria")) : null,
+  );
   const [intento, setIntento] = useState(0);
 
   useEffect(() => {
@@ -111,6 +113,7 @@ function Home() {
                     descripcion={p.description}
                     precio={p.price}
                     stock={p.stock}
+                    imagenUrl={p.imageUrl}
                     categorias={p.categories}
                   />
                 ))}
