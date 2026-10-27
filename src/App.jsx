@@ -5,6 +5,8 @@ import Login from "./pages/Login.jsx";
 import Registro from "./pages/Registro.jsx";
 import ProductoDetalle from "./pages/ProductoDetalle.jsx";
 import Products from "./pages/Products.jsx";
+import Cart from "./pages/Cart.jsx";
+import Checkout from "./pages/Checkout.jsx";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Products />} />
         <Route path="/productos/:id" element={<ProductoDetalle />} />
+        <Route path="/carrito" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
       </Routes>

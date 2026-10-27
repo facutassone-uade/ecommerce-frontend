@@ -1,16 +1,38 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import CategoryFilter from "../components/CategoryFilter.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import ErrorAlert from "../components/ErrorAlert.jsx";
 import ProductCard from "../components/ProductCard.jsx";
 import ProductCardSkeleton from "../components/ProductCardSkeleton.jsx";
+import { useAuth } from "../hooks/useAuth.js";
+import { useCart } from "../hooks/useCart.js";
 import { getCategorias } from "../services/categoriesService.js";
 import { getProductos } from "../services/productsService.js";
 
 function Home() {
   const [params] = useSearchParams();
+  const { usuario, logout } = useAuth();
+  const { agregar } = useCart();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [errorCarrito, setErrorCarrito] = useState(null);
+
+  const agregarAlCarrito = async (productoId) => {
+    if (!usuario) {
+      navigate("/login", { state: { desde: location.pathname } });
+      return;
+    }
+    setErrorCarrito(null);
+    try {
+      await agregar(productoId, 1);
+    } catch (err) {
+      if (err.status === 401) logout();
+      setErrorCarrito(err.message);
+    }
+  };
   const busqueda = (params.get("q") ?? "").toLowerCase();
 
   const [productos, setProductos] = useState([]);
@@ -20,7 +42,6 @@ function Home() {
   const [categoriaId, setCategoriaId] = useState(
     params.get("categoria") ? Number(params.get("categoria")) : null,
   );
-  const [intento, setIntento] = useState(0);
 
   useEffect(() => {
     const obtenerCatalogo = async () => {
@@ -38,9 +59,8 @@ function Home() {
     };
 
     obtenerCatalogo();
-  }, [intento]);
+  }, []);
 
-  // El back no tiene filtro por query/categoría todavía: se filtra en el front
   const visibles = productos.filter(
     (p) =>
       (categoriaId === null || p.categories.some((c) => c.id === categoriaId)) &&
@@ -64,8 +84,7 @@ function Home() {
       {error ? (
         <ErrorAlert
           titulo="No pudimos cargar los productos"
-          mensaje={`El servidor no responde o está apagado (${error}). Probá de nuevo en unos segundos.`}
-          onReintentar={() => setIntento((n) => n + 1)}
+          mensaje={error}
         />
       ) : (
         <>
@@ -87,6 +106,12 @@ function Home() {
                 </span>
               )}
             </div>
+
+            {errorCarrito && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{errorCarrito}</AlertDescription>
+              </Alert>
+            )}
 
             {cargando ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -115,6 +140,7 @@ function Home() {
                     stock={p.stock}
                     imagenUrl={p.imageUrl}
                     categorias={p.categories}
+                    onAgregar={() => agregarAlCarrito(p.id)}
                   />
                 ))}
               </div>

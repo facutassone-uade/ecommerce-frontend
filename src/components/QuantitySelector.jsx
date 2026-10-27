@@ -1,14 +1,14 @@
 import { Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-function QuantitySelector({ cantidad, min = 1, max, onCambiar }) {
+function QuantitySelector({ cantidad, min = 1, max, onCambiar, deshabilitado = false }) {
   return (
     <div className="inline-flex h-10 items-center rounded-lg border">
       <Button
         variant="ghost"
         size="icon-lg"
         aria-label="Restar"
-        disabled={cantidad <= min}
+        disabled={deshabilitado || cantidad <= min}
         onClick={() => onCambiar(cantidad - 1)}
       >
         <Minus />
@@ -18,7 +18,7 @@ function QuantitySelector({ cantidad, min = 1, max, onCambiar }) {
         variant="ghost"
         size="icon-lg"
         aria-label="Sumar"
-        disabled={max !== undefined && cantidad >= max}
+        disabled={deshabilitado || (max !== undefined && cantidad >= max)}
         onClick={() => onCambiar(cantidad + 1)}
       >
         <Plus />

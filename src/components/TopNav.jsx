@@ -4,10 +4,12 @@ import { Search, ShoppingBag, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "../hooks/useAuth.js";
+import { useCart } from "../hooks/useCart.js";
 import UserMenu from "./UserMenu.jsx";
 
 function TopNav() {
   const { usuario } = useAuth();
+  const { cantidadTotal } = useCart();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [busqueda, setBusqueda] = useState(params.get("q") ?? "");
@@ -40,8 +42,15 @@ function TopNav() {
         </form>
 
         <nav className="flex shrink-0 items-center gap-1">
-          <Button variant="ghost" size="icon-lg" aria-label="Carrito">
-            <ShoppingCart className="size-5" />
+          <Button variant="ghost" size="icon-lg" aria-label="Carrito" className="relative" asChild>
+            <Link to="/carrito">
+              <ShoppingCart className="size-5" />
+              {cantidadTotal > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  {cantidadTotal}
+                </span>
+              )}
+            </Link>
           </Button>
           {usuario ? (
             <UserMenu />
