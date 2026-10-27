@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import Card from "../components/Card.jsx";
 import Loader from "../components/Loader.jsx";
 import { getProductos, getProductoById } from "../services/productsService.js";
 
-function Productos() {
+function Products() {
   const [items, setItems] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -46,7 +46,7 @@ function Productos() {
       disponible={true}
       onClick={onClick}
     >
-      {item.envioGratis && <p className="card-envio">Envío gratis</p>}
+      {item.envioGratis && <p className="card-envio">EnvÃ­o gratis</p>}
       {item.compraInternacional && (
         <p className="card-internacional">Compra internacional</p>
       )}
@@ -79,4 +79,4 @@ function Productos() {
   );
 }
 
-export default Productos;
+export default Products;
