@@ -41,8 +41,7 @@ function UserMenu() {
           <span className="text-xs font-normal">{usuario.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/* Perfil y Mis órdenes se habilitan cuando estén esas pantallas */}
-        <DropdownMenuItem disabled>
+        <DropdownMenuItem onSelect={() => navigate("/perfil")}>
           <User /> Mi perfil
         </DropdownMenuItem>
         <DropdownMenuItem disabled>

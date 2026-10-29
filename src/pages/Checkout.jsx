@@ -8,7 +8,7 @@ import ErrorAlert from "../components/ErrorAlert.jsx";
 import OrderSummary from "../components/OrderSummary.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCart } from "../hooks/useCart.js";
-import { getCliente } from "../services/customersService.js";
+import { solicitarCliente } from "../services/customersService.js";
 
 const metodosPago = [
   "Tarjeta de crédito",
@@ -36,7 +36,7 @@ function Checkout() {
       setCliente(null);
 
       try {
-        setCliente(await getCliente(customerId));
+        setCliente(await solicitarCliente(customerId));
       } catch (err) {
         if (err.status === 401) {
           logout();
@@ -50,6 +50,10 @@ function Checkout() {
 
   const confirmar = async () => {
     if (confirmando) return;
+    if (datosIncompletos) {
+      setErrorCompra("Completá tus datos de envío en Mi perfil antes de confirmar.");
+      return;
+    }
     setConfirmando(true);
     setErrorCompra(null);
     try {
@@ -62,13 +66,19 @@ function Checkout() {
     }
   };
 
-  const direccion = cliente?.address;
+  const datosIncompletos =
+    !cliente?.nationalId ||
+    !cliente?.phone ||
+    !cliente?.address?.street?.trim() ||
+    !cliente?.address?.city?.trim() ||
+    !cliente?.address?.zipCode?.trim() ||
+    !cliente?.address?.country?.trim();
   const textoDireccion = [
-    direccion?.street,
-    direccion?.city,
-    direccion?.zipCode,
-    direccion?.country,
-  ].filter(Boolean).join(", ") || "Dirección sin cargar";
+    cliente?.address?.street,
+    cliente?.address?.city,
+    cliente?.address?.zipCode,
+    cliente?.address?.country,
+  ].filter(Boolean).join(", ");
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
@@ -83,7 +93,7 @@ function Checkout() {
           </Button>
         </EmptyState>
       ) : orden ? (
-        <Card>
+        <Card className={datosIncompletos ? "border-destructive" : ""}>
           <CardContent className="flex flex-col items-start gap-3" role="status">
             <h2 className="text-xl font-bold">Orden #{orden.id} creada</h2>
             <p>Total: ${orden.total}</p>
@@ -117,14 +127,34 @@ function Checkout() {
             <Card>
               <CardContent className="flex flex-col gap-3">
                 <h2 className="text-lg font-bold">Datos de envío</h2>
-                <p className="text-sm text-muted-foreground">
-                  {usuario.firstName} {usuario.lastName}
-                  {" · DNI: "}{cliente.nationalId ?? "Sin cargar"}
-                  {" · Tel.: "}{cliente.phone ?? "Sin cargar"}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {textoDireccion}
-                </p>
+                {datosIncompletos ? (
+                  <Alert variant="destructive" role="alert">
+                    <AlertDescription>
+                      Para confirmar la compra, completá tus datos de envío en Mi perfil.
+                      Al guardar volverás al checkout.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground">
+                      {usuario.firstName} {usuario.lastName}
+                      {" · DNI: "}{cliente.nationalId}
+                      {" · Tel.: "}{cliente.phone}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {textoDireccion}
+                    </p>
+                  </>
+                )}
+                <Button
+                  variant={datosIncompletos ? "outline" : "link"}
+                  className={datosIncompletos ? "self-start" : "self-start px-0"}
+                  asChild
+                >
+                  <Link to="/perfil" state={{ desde: "/checkout" }}>
+                    {datosIncompletos ? "Completar mi perfil" : "Editar datos de envío"}
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
 
@@ -163,7 +193,7 @@ function Checkout() {
               items={items}
               textoBoton={confirmando ? "Confirmando..." : "Confirmar compra"}
               onContinuar={confirmar}
-              deshabilitado={confirmando}
+              deshabilitado={confirmando || datosIncompletos}
             />
           </div>
         </div>

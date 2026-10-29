@@ -12,3 +12,21 @@ export const validarCampos = (valores, requeridos) => {
   }
   return errores;
 };
+
+export const validarDatosEnvio = (valores) => {
+  const errores = {};
+  const telefono = String(valores?.phone ?? "").trim();
+  const direccion = valores?.address;
+
+  if (!String(valores?.nationalId ?? "").trim()) errores.nationalId = "El DNI es obligatorio";
+  if (!telefono) errores.phone = "El teléfono es obligatorio";
+  if (!direccion?.street?.trim()) errores.street = "La calle es obligatoria";
+  if (!direccion?.city?.trim()) errores.city = "La ciudad es obligatoria";
+  if (!direccion?.zipCode?.trim()) errores.zipCode = "El código postal es obligatorio";
+  if (!direccion?.country?.trim()) errores.country = "El país es obligatorio";
+
+  if (telefono.length > 15) {
+    errores.phone = "El teléfono debe tener como máximo 15 caracteres.";
+  }
+  return errores;
+};

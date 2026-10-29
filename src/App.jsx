@@ -7,6 +7,7 @@ import ProductoDetalle from "./pages/ProductoDetalle.jsx";
 import Products from "./pages/Products.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import Perfil from "./pages/Perfil.jsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/productos/:id" element={<ProductoDetalle />} />
         <Route path="/carrito" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/perfil" element={<Perfil />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
       </Routes>
