@@ -13,7 +13,7 @@ import { useCart } from "../hooks/useCart.js";
 import { getProductos } from "../services/productsService.js";
 
 function Cart() {
-  const { usuario, logout } = useAuth();
+  const { usuario } = useAuth();
   const {
     items,
     fechaEntrega,
@@ -49,7 +49,6 @@ function Cart() {
     try {
       await cambiarCantidad(item, cantidad);
     } catch (err) {
-      if (err.status === 401) logout();
       setMensajeError(err.message);
     } finally {
       setProcesando(false);
@@ -62,7 +61,6 @@ function Cart() {
     try {
       await eliminar(item);
     } catch (err) {
-      if (err.status === 401) logout();
       setMensajeError(err.message);
     } finally {
       setProcesando(false);
@@ -75,7 +73,6 @@ function Cart() {
     try {
       await vaciar();
     } catch (err) {
-      if (err.status === 401) logout();
       setMensajeError(err.message);
     } finally {
       setProcesando(false);
@@ -88,7 +85,6 @@ function Cart() {
     try {
       await cambiarFechaEntrega(fecha);
     } catch (err) {
-      if (err.status === 401) logout();
       setMensajeError(err.message);
     } finally {
       setProcesando(false);

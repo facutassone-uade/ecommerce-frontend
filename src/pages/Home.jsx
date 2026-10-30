@@ -14,7 +14,7 @@ import { getProductos } from "../services/productsService.js";
 
 function Home() {
   const [params] = useSearchParams();
-  const { usuario, logout } = useAuth();
+  const { usuario } = useAuth();
   const { agregar } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +29,6 @@ function Home() {
     try {
       await agregar(productoId, 1);
     } catch (err) {
-      if (err.status === 401) logout();
       setErrorCarrito(err.message);
     }
   };
