@@ -59,7 +59,6 @@ function Checkout() {
     try {
       setOrden(await confirmarCompra(metodoPago));
     } catch (err) {
-      if (err.status === 401) logout();
       setErrorCompra(err.message);
     } finally {
       setConfirmando(false);

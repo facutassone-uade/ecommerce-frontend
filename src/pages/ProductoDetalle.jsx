@@ -23,7 +23,7 @@ import { getProductoById } from "../services/productsService.js";
 
 function ProductoDetalle() {
   const { id } = useParams();
-  const { usuario, logout } = useAuth();
+  const { usuario } = useAuth();
   const { agregar } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,7 +63,6 @@ function ProductoDetalle() {
       setMensajeCarrito({ tipo: "ok" });
       return true;
     } catch (err) {
-      if (err.status === 401) logout();
       setMensajeCarrito({ tipo: "error", mensaje: err.message });
       return false;
     }
