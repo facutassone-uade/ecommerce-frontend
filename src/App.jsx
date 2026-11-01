@@ -5,6 +5,7 @@ import TopNav from "./components/TopNav.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import AdminCarritos from "./pages/admin/AdminCarritos.jsx";
 import AdminCategorias from "./pages/admin/AdminCategorias.jsx";
+import AdminClientes from "./pages/admin/AdminClientes.jsx";
 import AdminOrdenes from "./pages/admin/AdminOrdenes.jsx";
 import AdminProductos from "./pages/admin/AdminProductos.jsx";
 import { selectEsAdmin, selectToken } from "./store/authSlice.js";
@@ -59,6 +60,7 @@ function App() {
         <Route path="categorias" element={<AdminCategorias />} />
         <Route path="ordenes" element={<AdminOrdenes />} />
         <Route path="carritos" element={<AdminCarritos />} />
+        <Route path="clientes" element={<AdminClientes />} />
       </Route>
     </Routes>
   );
