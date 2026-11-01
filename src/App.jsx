@@ -4,6 +4,7 @@ import { Navigate, Outlet, Routes, Route } from "react-router-dom";
 import TopNav from "./components/TopNav.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import AdminCategorias from "./pages/admin/AdminCategorias.jsx";
+import AdminOrdenes from "./pages/admin/AdminOrdenes.jsx";
 import AdminProductos from "./pages/admin/AdminProductos.jsx";
 import { selectEsAdmin, selectToken } from "./store/authSlice.js";
 import { cargarCarrito } from "./store/cartSlice.js";
@@ -55,6 +56,7 @@ function App() {
         <Route index element={<Navigate to="productos" replace />} />
         <Route path="productos" element={<AdminProductos />} />
         <Route path="categorias" element={<AdminCategorias />} />
+        <Route path="ordenes" element={<AdminOrdenes />} />
       </Route>
     </Routes>
   );
