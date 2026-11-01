@@ -9,13 +9,7 @@ import OrderSummary from "../components/OrderSummary.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCart } from "../hooks/useCart.js";
 import { solicitarCliente } from "../services/customersService.js";
-
-const metodosPago = [
-  "Tarjeta de crédito",
-  "Tarjeta de débito",
-  "Transferencia",
-  "Efectivo",
-];
+import { metodosPago } from "../utils/metodosPago.js";
 
 function Checkout() {
   const { usuario, logout } = useAuth();

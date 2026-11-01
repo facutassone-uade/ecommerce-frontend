@@ -1,3 +1,5 @@
+import { solicitarConToken } from "./api.js";
+
 export const solicitarCliente = async (customerId, method = "GET", body) => {
   const sesion = JSON.parse(localStorage.getItem("sesion"));
   const token = sesion?.token;
@@ -23,3 +25,9 @@ export const solicitarCliente = async (customerId, method = "GET", body) => {
 
 export const actualizarCliente = (customerId, datos) =>
   solicitarCliente(customerId, "PUT", datos);
+
+// Solo con rol ADMIN
+export const getClientes = () => solicitarConToken("/api/customers");
+
+export const eliminarCliente = (customerId) =>
+  solicitarConToken(`/api/customers/${customerId}`, "DELETE");

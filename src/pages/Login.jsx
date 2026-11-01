@@ -28,8 +28,9 @@ function Login() {
     setEnviando(true);
     setErrorApi(null);
     try {
-      await login(valores.email.trim(), valores.password);
-      navigate(location.state?.desde ?? "/", { replace: true });
+      const usuario = await login(valores.email.trim(), valores.password);
+      const inicio = usuario.role === "ADMIN" ? "/admin" : "/";
+      navigate(location.state?.desde ?? inicio, { replace: true });
     } catch (err) {
       setErrorApi(
         err.status === 401
