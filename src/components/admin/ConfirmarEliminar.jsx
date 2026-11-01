@@ -44,7 +44,11 @@ function ConfirmarEliminar({ abierto, onCerrar, titulo, descripcion, onConfirmar
         {error && <p className="text-sm text-destructive">{error}</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={eliminando}>Cancelar</AlertDialogCancel>
-          <Button variant="destructive" onClick={confirmar} disabled={eliminando}>
+          <Button
+            className="bg-destructive text-white hover:bg-destructive/90"
+            onClick={confirmar}
+            disabled={eliminando}
+          >
             {eliminando ? "Eliminando…" : "Eliminar"}
           </Button>
         </AlertDialogFooter>
