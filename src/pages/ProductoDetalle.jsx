@@ -20,6 +20,7 @@ import QuantitySelector from "../components/QuantitySelector.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCart } from "../hooks/useCart.js";
 import { getProductoById } from "../services/productsService.js";
+import { formatearPrecio } from "../utils/formato.js";
 
 function ProductoDetalle() {
   const { id } = useParams();
@@ -148,7 +149,7 @@ function ProductoDetalle() {
             </div>
           )}
           <h1 className="text-2xl font-extrabold sm:text-3xl">{producto.name}</h1>
-          <p className="text-3xl font-extrabold">${producto.price}</p>
+          <p className="text-3xl font-extrabold">{formatearPrecio(producto.price)}</p>
           {sinStock ? (
             <Badge variant="destructive">Sin stock</Badge>
           ) : (

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ImageIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatearPrecio } from "../utils/formato.js";
 import QuantitySelector from "./QuantitySelector.jsx";
 
 function CartItem({
@@ -33,7 +34,7 @@ function CartItem({
           <Link to={to} className="block truncate font-semibold hover:underline">
             {nombre}
           </Link>
-          <p className="text-xs text-muted-foreground">${precio} c/u</p>
+          <p className="text-xs text-muted-foreground">{formatearPrecio(precio)} c/u</p>
         </div>
 
         <QuantitySelector
@@ -43,7 +44,7 @@ function CartItem({
           deshabilitado={procesando}
         />
 
-        <p className="w-24 text-right font-bold">${precio * cantidad}</p>
+        <p className="w-24 text-right font-bold">{formatearPrecio(precio * cantidad)}</p>
 
         <Button
           variant="ghost"
