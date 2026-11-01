@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ChevronDown, LogOut, Package, User } from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut, Package, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +13,7 @@ import {
 import { useAuth } from "../hooks/useAuth.js";
 
 function UserMenu() {
-  const { usuario, logout } = useAuth();
+  const { usuario, esAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const iniciales = `${usuario.firstName?.[0] ?? ""}${usuario.lastName?.[0] ?? ""}`.toUpperCase();
 
@@ -41,6 +41,11 @@ function UserMenu() {
           <span className="text-xs font-normal">{usuario.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {esAdmin && (
+          <DropdownMenuItem onSelect={() => navigate("/admin")}>
+            <LayoutDashboard /> Panel admin
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onSelect={() => navigate("/perfil")}>
           <User /> Mi perfil
         </DropdownMenuItem>

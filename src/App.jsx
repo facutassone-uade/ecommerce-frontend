@@ -1,8 +1,9 @@
 ﻿import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Outlet, Routes, Route } from "react-router-dom";
 import TopNav from "./components/TopNav.jsx";
-import { selectToken } from "./store/authSlice.js";
+import AdminLayout from "./components/admin/AdminLayout.jsx";
+import { selectEsAdmin, selectToken } from "./store/authSlice.js";
 import { cargarCarrito } from "./store/cartSlice.js";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -13,21 +14,32 @@ import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Perfil from "./pages/Perfil.jsx";
 
-function App() {
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-
-  // Cada vez que cambia la sesión traemos (o creamos) el carrito del usuario
-  useEffect(() => {
-    if (!token) return;
-    const carga = dispatch(cargarCarrito());
-    return () => carga.abort();
-  }, [token, dispatch]);
-
+// Las pantallas de la tienda llevan el TopNav; las del admin tienen su propio layout con sidebar
+function LayoutTienda() {
   return (
     <div className="flex min-h-svh flex-col">
       <TopNav />
-      <Routes>
+      <Outlet />
+    </div>
+  );
+}
+
+function App() {
+  const dispatch = useDispatch();
+  const token = useSelector(selectToken);
+  const esAdmin = useSelector(selectEsAdmin);
+
+  // Cada vez que cambia la sesión traemos (o creamos) el carrito del usuario.
+  // El admin no compra: si no, cada login le crearía un carrito que aparece en el listado.
+  useEffect(() => {
+    if (!token || esAdmin) return;
+    const carga = dispatch(cargarCarrito());
+    return () => carga.abort();
+  }, [token, esAdmin, dispatch]);
+
+  return (
+    <Routes>
+      <Route element={<LayoutTienda />}>
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Products />} />
         <Route path="/productos/:id" element={<ProductoDetalle />} />
@@ -36,8 +48,11 @@ function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
-      </Routes>
-    </div>
+      </Route>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="productos" replace />} />
+      </Route>
+    </Routes>
   );
 }
 
