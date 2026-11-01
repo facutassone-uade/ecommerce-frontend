@@ -26,7 +26,12 @@ const solicitarCarrito = async (url, method = "GET", body) => {
   return data;
 };
 
+// Con rol ADMIN devuelve los carritos de todos los clientes
 export const getCarritos = () => solicitarCarrito("/api/carts");
+
+export const getCarritoById = (cartId) => solicitarCarrito(`/api/carts/${cartId}`);
+
+export const eliminarCarrito = (cartId) => solicitarCarrito(`/api/carts/${cartId}`, "DELETE");
 
 export const crearCarrito = (customerId) =>
   solicitarCarrito("/api/carts", "POST", {

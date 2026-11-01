@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet, Routes, Route } from "react-router-dom";
 import TopNav from "./components/TopNav.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
+import AdminCarritos from "./pages/admin/AdminCarritos.jsx";
 import AdminCategorias from "./pages/admin/AdminCategorias.jsx";
 import AdminOrdenes from "./pages/admin/AdminOrdenes.jsx";
 import AdminProductos from "./pages/admin/AdminProductos.jsx";
@@ -57,6 +58,7 @@ function App() {
         <Route path="productos" element={<AdminProductos />} />
         <Route path="categorias" element={<AdminCategorias />} />
         <Route path="ordenes" element={<AdminOrdenes />} />
+        <Route path="carritos" element={<AdminCarritos />} />
       </Route>
     </Routes>
   );
