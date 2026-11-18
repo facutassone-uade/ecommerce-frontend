@@ -2,7 +2,7 @@
 
 Frontend de la app de e-commerce (React + Vite) para el TP de Aplicaciones Interactivas (UADE).
 
-Repo backend: https://github.com/facutassone-uade/ecommerce-backend
+Repo backend: https://github.com/facutassone-uade/back-ecommerce
 
 ## Qué es
 
@@ -13,6 +13,7 @@ Una tienda online de artículos para el hogar ("Tienda UADE"). El usuario puede:
 - Registrarse e iniciar sesión (JWT que devuelve el back).
 - Armar su carrito: agregar productos, cambiar cantidades, quitar, vaciar y elegir fecha de entrega.
 - Hacer el checkout eligiendo método de pago, lo que genera una orden en el back.
+- Ver el historial de sus compras en **Mis órdenes** (`/ordenes`, `GET /api/orders/user/{userId}`), con filtro de pendientes de pago y detalle de cada orden.
 
 El carrito vive en el backend (asociado al cliente), así que se mantiene entre sesiones y dispositivos.
 
@@ -35,7 +36,7 @@ npm install
 npm run dev
 ```
 
-La app queda en `http://localhost:3000`. Vite redirige todo lo que empieza con `/api` al backend (proxy en `vite.config.js`), así que no hay que configurar CORS.
+La app queda en `http://localhost:3000`. Vite redirige todo lo que empieza con `/api` al backend (proxy en `vite.config.js`), así que en desarrollo las llamadas salen al mismo origen. Igual el back tiene CORS configurado (`SecurityConfig`) para `localhost:3000` y `localhost:5173`, por si se llama a la API directo.
 
 Otros scripts: `npm run build`, `npm run lint`, `npm run preview`.
 
@@ -45,7 +46,7 @@ Otros scripts: `npm run build`, `npm run lint`, `npm run preview`.
 src/
 ├── main.jsx            punto de entrada: Provider de Redux + BrowserRouter
 ├── App.jsx             rutas y carga del carrito cuando cambia la sesión
-├── pages/              una pantalla por ruta (Home, ProductoDetalle, Cart, Checkout, Login, Registro)
+├── pages/              una pantalla por ruta (Home, ProductoDetalle, Cart, Checkout, Ordenes, Login, Registro)
 │   └── admin/          pantallas del panel admin (AdminProductos, AdminCategorias, AdminOrdenes...)
 ├── components/         componentes propios (TopNav, CartItem, OrderSummary...) y ui/ de shadcn
 │   └── admin/          layout con sidebar, guard de rol y diálogos del panel admin
