@@ -94,9 +94,14 @@ function Checkout() {
             <p className="text-muted-foreground">
               Método de pago: {orden.paymentMethod}. Estado: {orden.paid ? "Pagada" : "Pendiente de pago"}.
             </p>
-            <Button asChild>
-              <Link to="/">Seguir comprando</Link>
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild>
+                <Link to="/">Seguir comprando</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/ordenes">Ver mis órdenes</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : error || errorCliente ? (
