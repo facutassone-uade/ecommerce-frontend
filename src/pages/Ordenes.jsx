@@ -4,11 +4,12 @@ import { ChevronDown, Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "../components/EmptyState.jsx";
 import ErrorAlert from "../components/ErrorAlert.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { getMisOrdenes } from "../services/ordersService.js";
-import { formatearPrecio } from "../utils/formato.js";
+import { formatearFecha, formatearPrecio } from "../utils/formato.js";
 
 
 function Ordenes() {
@@ -20,20 +21,28 @@ function Ordenes() {
 
   useEffect(() => {
     if (!usuario) return;
+    // Evita guardar la respuesta si el usuario cambió o se salió de la pantalla antes de que llegue
+    let vigente = true;
 
     async function cargarOrdenes() {
       setOrdenes(null);
       setError(null);
 
       try {
-        setOrdenes(await getMisOrdenes(usuario.userId));
+        const datos = await getMisOrdenes(usuario.userId);
+        // Las más nuevas primero
+        if (vigente) setOrdenes([...datos].sort((a, b) => b.id - a.id));
       } catch (err) {
+        if (!vigente) return;
         if (err.status === 401) logout();
         setError(err);
       }
     }
 
     cargarOrdenes();
+    return () => {
+      vigente = false;
+    };
   }, [usuario, logout]);
 
   const ordenesFiltradas = (ordenes ?? []).filter(
@@ -51,9 +60,31 @@ function Ordenes() {
           </Button>
         </EmptyState>
       ) : error ? (
-        <ErrorAlert titulo="No pudimos cargar tus órdenes" mensaje={error.message} />
+        <ErrorAlert
+          titulo="No pudimos cargar tus órdenes"
+          mensaje={
+            // Sin status (fetch falló) o 5xx (el proxy de Vite responde 502 si el back está apagado)
+            !error.status || error.status >= 500
+              ? "No se pudo conectar con el servidor. Probá de nuevo más tarde."
+              : error.message
+          }
+        />
       ) : !ordenes ? (
-        <p>Cargando órdenes...</p>
+        <div className="flex max-w-3xl flex-col gap-3" aria-label="Cargando órdenes">
+          <Skeleton className="h-9 w-48" />
+          {Array.from({ length: 3 }, (_, i) => (
+            <Skeleton key={i} className="h-20 w-full rounded-xl" />
+          ))}
+        </div>
+      ) : ordenes.length === 0 ? (
+        <EmptyState
+          titulo="Todavía no hiciste ninguna compra"
+          descripcion="Cuando confirmes un carrito, la orden va a aparecer acá."
+        >
+          <Button asChild>
+            <Link to="/">Ver catálogo</Link>
+          </Button>
+        </EmptyState>
       ) : (
       <div className="max-w-3xl">
         <h1 className="text-2xl font-extrabold sm:text-3xl">Mis órdenes</h1>
@@ -80,6 +111,11 @@ function Ordenes() {
         </div>
 
         <div className="mt-5 flex flex-col gap-3">
+          {ordenesFiltradas.length === 0 && (
+            <p className="rounded-lg border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
+              No tenés órdenes pendientes de pago.
+            </p>
+          )}
           {ordenesFiltradas.map((orden) => {
             const estaAbierta = ordenAbierta === orden.id;
             const cantidadProductos = (orden.items ?? []).reduce(
@@ -98,7 +134,8 @@ function Ordenes() {
                       <div className="min-w-0">
                         <p className="font-bold">Orden #{orden.id}</p>
                         <p className="truncate text-xs text-muted-foreground">
-                          {orden.date} · {cantidadProductos} productos · {orden.paymentMethod}
+                          {formatearFecha(orden.date)} · {cantidadProductos}{" "}
+                          {cantidadProductos === 1 ? "producto" : "productos"} · {orden.paymentMethod}
                         </p>
                       </div>
                     </div>
