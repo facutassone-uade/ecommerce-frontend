@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import FormField from "../components/FormField.jsx";
 import OrderSummary from "../components/OrderSummary.jsx";
 import { useAuth } from "../hooks/useAuth.js";
 import { useCart } from "../hooks/useCart.js";
-import { getProductos } from "../services/productsService.js";
 
 function Cart() {
   const { usuario } = useAuth();
@@ -26,22 +25,8 @@ function Cart() {
   } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
-  const [imagenes, setImagenes] = useState({});
   const [procesando, setProcesando] = useState(false);
   const [mensajeError, setMensajeError] = useState(null);
-
-  useEffect(() => {
-    const obtenerImagenes = async () => {
-      try {
-        const productos = await getProductos();
-        setImagenes(Object.fromEntries(productos.map((p) => [p.id, p.imageUrl])));
-      } catch {
-        setImagenes({});
-      }
-    };
-
-    obtenerImagenes();
-  }, []);
 
   const actualizarCantidad = async (item, cantidad) => {
     setProcesando(true);
@@ -169,7 +154,7 @@ function Cart() {
                 precio={item.product.price}
                 cantidad={item.quantity}
                 max={item.product.stock}
-                imagenUrl={imagenes[item.product.id]}
+                imagenUrl={item.product.imageUrl}
                 procesando={procesando}
                 onCambiarCantidad={(cantidad) => actualizarCantidad(item, cantidad)}
                 onEliminar={() => eliminarProducto(item)}

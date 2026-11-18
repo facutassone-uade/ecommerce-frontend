@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +27,7 @@ const POR_PAGINA = 10;
 
 function AdminProductos() {
   const { datos: productos, setDatos: setProductos, error } = useListado(getProductos);
-  const { datos: categorias } = useListado(getCategorias);
+  const { datos: categorias, error: errorCategorias } = useListado(getCategorias);
   const [busqueda, setBusqueda] = useState("");
   const [pagina, setPagina] = useState(1);
   // undefined = cerrado, null = nuevo producto, objeto = editar ese producto
@@ -66,6 +67,15 @@ function AdminProductos() {
           <Plus /> Nuevo producto
         </Button>
       </AdminEncabezado>
+
+      {errorCategorias && !error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription>
+            No pudimos cargar las categorías ({errorCategorias.message}). Podés editar los productos, pero no
+            asignarles categorías hasta recargar la página.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {error ? (
         <ErrorAlert titulo="No pudimos cargar los productos" mensaje={error.message} />
