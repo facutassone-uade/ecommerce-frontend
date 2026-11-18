@@ -10,6 +10,7 @@ import { useAuth } from "../hooks/useAuth.js";
 import { useCart } from "../hooks/useCart.js";
 import { solicitarCliente } from "../services/customersService.js";
 import { metodosPago } from "../utils/metodosPago.js";
+import { formatearPrecio } from "../utils/formato.js";
 
 function Checkout() {
   const { usuario, logout } = useAuth();
@@ -89,7 +90,7 @@ function Checkout() {
         <Card className={datosIncompletos ? "border-destructive" : ""}>
           <CardContent className="flex flex-col items-start gap-3" role="status">
             <h2 className="text-xl font-bold">Orden #{orden.id} creada</h2>
-            <p>Total: ${orden.total}</p>
+            <p>Total: {formatearPrecio(orden.total)}</p>
             <p className="text-muted-foreground">
               Método de pago: {orden.paymentMethod}. Estado: {orden.paid ? "Pagada" : "Pendiente de pago"}.
             </p>

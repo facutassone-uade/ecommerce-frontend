@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { formatearPrecio } from "../utils/formato.js";
 
 function OrderSummary({ items, textoBoton = "Continuar al checkout", onContinuar, deshabilitado = false }) {
   let unidades = 0;
@@ -18,7 +19,7 @@ function OrderSummary({ items, textoBoton = "Continuar al checkout", onContinuar
 
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Productos ({unidades})</span>
-          <span>${total}</span>
+          <span>{formatearPrecio(total)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Envío</span>
@@ -29,7 +30,7 @@ function OrderSummary({ items, textoBoton = "Continuar al checkout", onContinuar
 
         <div className="flex items-baseline justify-between">
           <span className="font-bold">Total</span>
-          <span className="text-2xl font-extrabold">${total}</span>
+          <span className="text-2xl font-extrabold">{formatearPrecio(total)}</span>
         </div>
 
         <Button size="lg" className="mt-2 h-10 w-full cursor-pointer" onClick={onContinuar} disabled={deshabilitado}>

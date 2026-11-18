@@ -3,6 +3,7 @@ import { ImageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { formatearPrecio } from "../utils/formato.js";
 
 function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, categorias = [], onAgregar }) {
   const sinStock = stock === 0;
@@ -38,7 +39,7 @@ function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, catego
         {descripcion && (
           <p className="line-clamp-2 text-sm text-muted-foreground">{descripcion}</p>
         )}
-        <p className="mt-auto text-xl font-bold">${precio.toLocaleString("es-AR")}</p>
+        <p className="mt-auto text-xl font-bold">{formatearPrecio(precio)}</p>
         {sinStock ? (
           <Badge variant="destructive">Sin stock</Badge>
         ) : (

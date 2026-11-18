@@ -14,10 +14,10 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Registro from "./pages/Registro.jsx";
 import ProductoDetalle from "./pages/ProductoDetalle.jsx";
-import Products from "./pages/Products.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Perfil from "./pages/Perfil.jsx";
+import Ordenes from "./pages/Ordenes.jsx";
 
 // Las pantallas de la tienda llevan el TopNav; las del admin tienen su propio layout con sidebar
 function LayoutTienda() {
@@ -46,11 +46,11 @@ function App() {
     <Routes>
       <Route element={<LayoutTienda />}>
         <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Products />} />
         <Route path="/productos/:id" element={<ProductoDetalle />} />
         <Route path="/carrito" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/ordenes" element={<Ordenes />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
       </Route>

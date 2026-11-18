@@ -49,7 +49,7 @@ function UserMenu() {
         <DropdownMenuItem onSelect={() => navigate("/perfil")}>
           <User /> Mi perfil
         </DropdownMenuItem>
-        <DropdownMenuItem disabled>
+        <DropdownMenuItem onSelect={() => navigate("/ordenes")}>
           <Package /> Mis órdenes
         </DropdownMenuItem>
         <DropdownMenuSeparator />

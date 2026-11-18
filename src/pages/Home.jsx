@@ -75,7 +75,12 @@ function Home() {
             Hasta 30% off en productos seleccionados
           </p>
         </div>
-        <Button variant="outline" size="lg" className="text-foreground">
+        <Button
+          variant="outline"
+          size="lg"
+          className="text-foreground"
+          onClick={() => document.getElementById("productos")?.scrollIntoView({ behavior: "smooth" })}
+        >
           Ver ofertas
         </Button>
       </section>
@@ -87,7 +92,7 @@ function Home() {
         />
       ) : (
         <>
-          <section className="mt-8">
+          <section id="productos" className="mt-8">
             <h2 className="mb-3 text-xl font-bold">Categorías</h2>
             <CategoryFilter
               categorias={categorias}
