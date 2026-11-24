@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { formatearPrecio } from "../utils/formato.js";
 
-function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, categorias = [], onAgregar }) {
+function ProductCard({ to, nombre, descripcion, precio, stock, enCarrito = 0, imagenUrl, categorias = [], onAgregar }) {
   const sinStock = stock === 0;
+  const todoEnCarrito = !sinStock && enCarrito >= stock;
 
   return (
     <Card className="gap-0 overflow-hidden py-0">
@@ -43,7 +44,10 @@ function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, catego
         {sinStock ? (
           <Badge variant="destructive">Sin stock</Badge>
         ) : (
-          <Badge variant="success">Stock: {stock}</Badge>
+          <div className="flex flex-wrap gap-1">
+            <Badge variant="success">Stock: {stock}</Badge>
+            {enCarrito > 0 && <Badge variant="secondary">En tu carrito: {enCarrito}</Badge>}
+          </div>
         )}
       </CardContent>
 
@@ -51,7 +55,7 @@ function ProductCard({ to, nombre, descripcion, precio, stock, imagenUrl, catego
         <Button variant="outline" size="lg" className="flex-1" asChild>
           <Link to={to}>Ver detalle</Link>
         </Button>
-        <Button size="lg" className="flex-1 cursor-pointer" disabled={sinStock} onClick={onAgregar}>
+        <Button size="lg" className="flex-1 cursor-pointer" disabled={sinStock || todoEnCarrito} onClick={onAgregar}>
           Agregar al carrito
         </Button>
       </CardFooter>

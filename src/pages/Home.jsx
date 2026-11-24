@@ -15,7 +15,7 @@ import { getProductos } from "../services/productsService.js";
 function Home() {
   const [params] = useSearchParams();
   const { usuario } = useAuth();
-  const { agregar } = useCart();
+  const { agregar, cantidadEnCarrito } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [errorCarrito, setErrorCarrito] = useState(null);
@@ -142,6 +142,7 @@ function Home() {
                     descripcion={p.description}
                     precio={p.price}
                     stock={p.stock}
+                    enCarrito={cantidadEnCarrito(p.id)}
                     imagenUrl={p.imageUrl}
                     categorias={p.categories}
                     onAgregar={() => agregarAlCarrito(p.id)}
