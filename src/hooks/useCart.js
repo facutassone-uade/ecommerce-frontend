@@ -10,6 +10,15 @@ export const useCart = () => {
   const cargando = useSelector(cart.selectCargando);
   const error = useSelector(cart.selectError);
 
+  // El back descuenta el stock recién al confirmar la compra: lo que se puede agregar es el stock menos lo que ya está en el carrito
+  const cantidadEnCarrito = useCallback(
+    (productId) =>
+      items
+        .filter((item) => item.product.id === productId)
+        .reduce((suma, item) => suma + item.quantity, 0),
+    [items],
+  );
+
   // unwrap() devuelve el resultado o lanza { message, status }, como antes con el Context
   const agregar = useCallback(
     (productId, cantidad = 1) => dispatch(cart.agregar({ productId, cantidad })).unwrap(),
@@ -33,6 +42,7 @@ export const useCart = () => {
   return {
     items,
     cantidadTotal,
+    cantidadEnCarrito,
     fechaEntrega,
     cargando,
     error,

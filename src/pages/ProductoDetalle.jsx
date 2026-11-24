@@ -25,7 +25,7 @@ import { formatearPrecio } from "../utils/formato.js";
 function ProductoDetalle() {
   const { id } = useParams();
   const { usuario } = useAuth();
-  const { agregar } = useCart();
+  const { agregar, cantidadEnCarrito } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [producto, setProducto] = useState(null);
@@ -60,7 +60,8 @@ function ProductoDetalle() {
     }
     setMensajeCarrito(null);
     try {
-      await agregar(producto.id, cantidad);
+      await agregar(producto.id, cantidadElegida);
+      setCantidad(1);
       setMensajeCarrito({ tipo: "ok" });
       return true;
     } catch (err) {
@@ -77,6 +78,11 @@ function ProductoDetalle() {
   };
 
   const sinStock = producto?.stock === 0;
+  const enCarrito = producto ? cantidadEnCarrito(producto.id) : 0;
+  const disponible = Math.max((producto?.stock ?? 0) - enCarrito, 0);
+  const todoEnCarrito = !sinStock && disponible === 0;
+  // Si el carrito cambió (por ejemplo, desde otra pestaña) la cantidad elegida no puede pasarse de lo disponible
+  const cantidadElegida = Math.min(cantidad, Math.max(disponible, 1));
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
@@ -157,6 +163,12 @@ function ProductoDetalle() {
               En stock · {producto.stock} {producto.stock === 1 ? "unidad" : "unidades"}
             </Badge>
           )}
+          {enCarrito > 0 && (
+            <p className="text-sm text-muted-foreground">
+              Ya tenés {enCarrito} en tu carrito
+              {!todoEnCarrito && ` · podés agregar ${disponible} más`}.
+            </p>
+          )}
 
           <Separator className="my-2" />
 
@@ -173,11 +185,20 @@ function ProductoDetalle() {
             </p>
           )}
 
-          {!sinStock && (
+          {todoEnCarrito && (
+            <p role="status" className="text-sm text-muted-foreground">
+              Ya agregaste todo el stock disponible.{" "}
+              <Link to="/carrito" className="underline">
+                Ver carrito
+              </Link>
+            </p>
+          )}
+
+          {!sinStock && !todoEnCarrito && (
             <div className="mt-2 flex flex-col gap-2">
               <span className="text-sm font-medium">Cantidad</span>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <QuantitySelector cantidad={cantidad} max={producto.stock} onCambiar={setCantidad} />
+                <QuantitySelector cantidad={cantidadElegida} max={disponible} onCambiar={setCantidad} />
                 <Button size="lg" className="h-10 w-full cursor-pointer sm:w-auto sm:flex-1" onClick={agregarAlCarrito}>
                   Agregar al carrito
                 </Button>
