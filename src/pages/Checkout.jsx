@@ -13,7 +13,7 @@ import { metodosPago } from "../utils/metodosPago.js";
 import { formatearPrecio } from "../utils/formato.js";
 
 function Checkout() {
-  const { usuario, logout } = useAuth();
+  const { usuario, logout, inicializando } = useAuth();
   const { items, cargando, error, confirmarCompra } = useCart();
   const customerId = usuario?.customerId;
   const [cliente, setCliente] = useState(null);
@@ -78,7 +78,9 @@ function Checkout() {
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
       <h1 className="mb-6 text-2xl font-extrabold sm:text-3xl">Checkout</h1>
 
-      {!usuario ? (
+      {inicializando ? (
+        <p role="status">Verificando sesión…</p>
+      ) : !usuario ? (
         <EmptyState titulo="Iniciá sesión para continuar con la compra">
           <Button asChild>
             <Link to="/login" state={{ desde: "/checkout" }}>

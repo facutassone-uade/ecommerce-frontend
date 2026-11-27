@@ -1,12 +1,8 @@
 const solicitarCarrito = async (url, method = "GET", body) => {
-  const sesion = JSON.parse(localStorage.getItem("sesion"));
-  const token = sesion?.token;
-  if (!token) throw new Error("Iniciá sesión para usar el carrito.");
-
   const respuesta = await fetch(url, {
     method,
+    credentials: "include",
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),

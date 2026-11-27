@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { List, LogOut, Package, ShoppingBag, ShoppingCart, Tag, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -17,9 +18,15 @@ const claseItem = "flex shrink-0 items-center gap-3 rounded-lg px-3 py-2 text-sm
 function AdminSidebar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [errorLogout, setErrorLogout] = useState(null);
 
-  const salir = () => {
-    logout();
+  const salir = async () => {
+    setErrorLogout(null);
+    const resultado = await logout();
+    if (resultado.meta.requestStatus !== "fulfilled") {
+      setErrorLogout(resultado.payload?.message ?? "No pudimos cerrar la sesión. Intentá de nuevo.");
+      return;
+    }
     navigate("/");
   };
 
@@ -55,12 +62,13 @@ function AdminSidebar() {
       <Separator className="hidden md:block" />
       <button
         type="button"
-        onClick={salir}
+        onClick={() => void salir()}
         className={cn(claseItem, "text-muted-foreground hover:bg-muted hover:text-foreground")}
       >
         <LogOut className="size-4" />
         Cerrar sesión
       </button>
+      {errorLogout && <p role="alert" className="px-3 text-xs text-destructive">{errorLogout}</p>}
     </aside>
   );
 }

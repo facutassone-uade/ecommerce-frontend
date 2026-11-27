@@ -8,7 +8,7 @@ import { useCart } from "../hooks/useCart.js";
 import UserMenu from "./UserMenu.jsx";
 
 function TopNav() {
-  const { usuario } = useAuth();
+  const { usuario, inicializando } = useAuth();
   const { cantidadTotal } = useCart();
   const navigate = useNavigate();
   const [params] = useSearchParams();
@@ -54,7 +54,7 @@ function TopNav() {
           </Button>
           {usuario ? (
             <UserMenu />
-          ) : (
+          ) : !inicializando ? (
             <>
               <Button variant="outline" size="lg" asChild>
                 <Link to="/login">Ingresar</Link>
@@ -63,7 +63,7 @@ function TopNav() {
                 <Link to="/registro">Crear cuenta</Link>
               </Button>
             </>
-          )}
+          ) : null}
         </nav>
       </div>
     </header>

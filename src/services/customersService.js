@@ -1,14 +1,10 @@
 import { solicitarConToken } from "./api.js";
 
 export const solicitarCliente = async (customerId, method = "GET", body) => {
-  const sesion = JSON.parse(localStorage.getItem("sesion"));
-  const token = sesion?.token;
-  if (!token) throw new Error("Iniciá sesión para ver tus datos.");
-
   const respuesta = await fetch(`/api/customers/${customerId}`, {
     method,
+    credentials: "include",
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
