@@ -8,7 +8,7 @@ import AdminCategorias from "./pages/admin/AdminCategorias.jsx";
 import AdminClientes from "./pages/admin/AdminClientes.jsx";
 import AdminOrdenes from "./pages/admin/AdminOrdenes.jsx";
 import AdminProductos from "./pages/admin/AdminProductos.jsx";
-import { selectEsAdmin, selectToken } from "./store/authSlice.js";
+import { restaurarSesion, selectEsAdmin, selectUsuario } from "./store/authSlice.js";
 import { cargarCarrito } from "./store/cartSlice.js";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -31,16 +31,21 @@ function LayoutTienda() {
 
 function App() {
   const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const usuario = useSelector(selectUsuario);
   const esAdmin = useSelector(selectEsAdmin);
+  const inicializando = useSelector((state) => state.auth.inicializando);
 
-  // Cada vez que cambia la sesión traemos (o creamos) el carrito del usuario.
+  useEffect(() => {
+    dispatch(restaurarSesion());
+  }, [dispatch]);
+
+  // Al restaurar o cambiar la sesión traemos (o creamos) el carrito del usuario.
   // El admin no compra: si no, cada login le crearía un carrito que aparece en el listado.
   useEffect(() => {
-    if (!token || esAdmin) return;
+    if (inicializando || !usuario || esAdmin) return;
     const carga = dispatch(cargarCarrito());
     return () => carga.abort();
-  }, [token, esAdmin, dispatch]);
+  }, [inicializando, usuario, esAdmin, dispatch]);
 
   return (
     <Routes>

@@ -13,7 +13,7 @@ import { formatearFecha, formatearPrecio } from "../utils/formato.js";
 
 
 function Ordenes() {
-  const { usuario, logout } = useAuth();
+  const { usuario, logout, inicializando } = useAuth();
   const [ordenes, setOrdenes] = useState(null);
   const [error, setError] = useState(null);
   const [filtro, setFiltro] = useState("todas");
@@ -51,7 +51,9 @@ function Ordenes() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
-      {!usuario ? (
+      {inicializando ? (
+        <p role="status">Verificando sesión…</p>
+      ) : !usuario ? (
         <EmptyState titulo="Iniciá sesión para ver tus órdenes">
           <Button asChild>
             <Link to="/login" state={{ desde: "/ordenes" }}>

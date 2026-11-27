@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import * as cartService from "../services/cartService.js";
-import { logout } from "./authSlice.js";
+import { logout, sesionInvalidada } from "./authSlice.js";
 import { aErrorSerializable } from "./errores.js";
 
 // Envuelve una operación del carrito para que los errores lleguen con message y status
@@ -126,7 +126,8 @@ const cartSlice = createSlice({
       .addCase(confirmarCompra.fulfilled, (state) => {
         state.carrito.items = [];
       })
-      .addCase(logout, () => initialState);
+      .addCase(logout.fulfilled, () => initialState)
+      .addCase(sesionInvalidada, () => initialState);
   },
 });
 

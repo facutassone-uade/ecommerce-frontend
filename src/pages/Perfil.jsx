@@ -11,7 +11,7 @@ import { actualizarCliente, solicitarCliente } from "../services/customersServic
 import { validarDatosEnvio } from "../utils/validaciones.js";
 
 function Perfil() {
-  const { usuario, logout } = useAuth();
+  const { usuario, logout, inicializando } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const volverAlCheckout = location.state?.desde === "/checkout";
@@ -104,7 +104,9 @@ function Perfil() {
           : "Estos datos se usan para el envío de tus compras."}
       </p>
 
-      {!usuario ? (
+      {inicializando ? (
+        <p role="status">Verificando sesión…</p>
+      ) : !usuario ? (
         <EmptyState titulo="Iniciá sesión para ver tu perfil">
           <Button asChild>
             <Link to="/login" state={{ desde: volverAlCheckout ? "/checkout" : "/perfil" }}>

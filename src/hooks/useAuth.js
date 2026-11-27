@@ -6,6 +6,7 @@ export const useAuth = () => {
   const dispatch = useDispatch();
   const usuario = useSelector(auth.selectUsuario);
   const esAdmin = useSelector(auth.selectEsAdmin);
+  const inicializando = useSelector((state) => state.auth.inicializando);
 
   const login = useCallback(
     (email, password) => dispatch(auth.login({ email, password })).unwrap(),
@@ -14,5 +15,5 @@ export const useAuth = () => {
   const registrar = useCallback((datos) => dispatch(auth.registrar(datos)).unwrap(), [dispatch]);
   const logout = useCallback(() => dispatch(auth.logout()), [dispatch]);
 
-  return { usuario, esAdmin, login, registrar, logout };
+  return { usuario, esAdmin, inicializando, login, registrar, logout };
 };

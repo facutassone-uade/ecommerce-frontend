@@ -35,7 +35,7 @@ function Registro() {
     setEnviando(true);
     setErrorApi(null);
     try {
-      // El back devuelve el token al registrarse: queda logueado directamente
+      // El backend establece la cookie HttpOnly y devuelve los datos del usuario.
       await registrar({
         firstName: valores.firstName.trim(),
         lastName: valores.lastName.trim(),

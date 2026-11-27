@@ -10,7 +10,7 @@ Una tienda online de artículos para el hogar ("Tienda UADE"). El usuario puede:
 
 - Ver el catálogo de productos, filtrarlo por categoría y buscar por nombre.
 - Entrar al detalle de cada producto (imagen, descripción, stock).
-- Registrarse e iniciar sesión (JWT que devuelve el back).
+- Registrarse e iniciar sesión (el back guarda el JWT en una cookie `HttpOnly`).
 - Armar su carrito: agregar productos, cambiar cantidades, quitar, vaciar y elegir fecha de entrega.
 - Hacer el checkout eligiendo método de pago, lo que genera una orden en el back.
 - Ver el historial de sus compras en **Mis órdenes** (`/ordenes`, `GET /api/orders/user/{userId}`), con filtro de pendientes de pago y detalle de cada orden.
@@ -28,7 +28,7 @@ Un usuario con rol **ADMIN** entra a un panel propio (`/admin`) para administrar
 
 ## Cómo levantarlo
 
-1. Levantar el backend en `http://localhost:8080` (ver el README del repo del back: necesita MySQL y la variable `JWT_SECRET`).
+1. Levantar el backend en `http://localhost:8080` usando la rama [`feature/add-cookie`](https://github.com/facutassone-uade/back-ecommerce/tree/feature/add-cookie) (ver el README del repo del back: necesita MySQL y la variable `JWT_SECRET`). La rama `main` todavía usa el header `Authorization` y no es compatible con este flujo de cookies.
 2. Instalar dependencias y correr el front:
 
 ```bash
@@ -52,7 +52,7 @@ src/
 │   └── admin/          layout con sidebar, guard de rol y diálogos del panel admin
 ├── store/              estado global con Redux Toolkit
 ├── hooks/              useAuth y useCart: la API que usan las pantallas para hablar con el store; useListado para las tablas del admin
-├── services/           llamadas fetch al backend, una por recurso (api.js: llamada con token que usan las del admin)
+├── services/           llamadas fetch al backend, una por recurso (api.js: llamadas autenticadas con cookie)
 └── utils/              validaciones y helpers (formato de precios y fechas, métodos de pago)
 ```
 
@@ -60,16 +60,16 @@ src/
 
 El estado compartido (sesión y carrito) estaba en dos Context de React (`AuthProvider` y `CartProvider`). Lo migramos a Redux Toolkit para centralizarlo, evitar renders de más y no repetir el manejo de errores en cada pantalla.
 
-- `store/store.js`: arma el store con los reducers `auth` y `cart` y un listener middleware que:
-  - borra la sesión de `localStorage` cuando se despacha `logout`;
-  - cierra la sesión automáticamente si cualquier operación del carrito responde **401** (token vencido o inválido). Antes cada página tenía su propio `if (err.status === 401) logout()`.
-- `store/authSlice.js`: guarda el `usuario` (respuesta del login, incluye el token). Thunks `login` y `registrar`, acción `logout`. Al iniciar, lee la sesión guardada en `localStorage`.
+- `store/store.js`: arma el store con los reducers `auth` y `cart` y un listener middleware que limpia el estado cuando una operación responde **401**.
+- `store/authSlice.js`: mantiene los datos del usuario en Redux; `login`, `registrar`, `restaurarSesion` (consulta `/api/auth/me`) y `logout` (llama a `/api/auth/logout`).
 - `store/cartSlice.js`: guarda el carrito del back, `cargando` y `error`. Un thunk por operación (`cargarCarrito`, `agregar`, `eliminar`, `cambiarCantidad`, `vaciar`, `cambiarFechaEntrega`, `confirmarCompra`) y selectores como `selectItems` o `selectCantidadTotal`. Al hacer logout el carrito se limpia.
 - `store/errores.js`: convierte los errores a `{ message, status }`, porque Redux no guarda instancias de `Error`.
 
 Las pantallas no usan el store directamente: siguen llamando a `useAuth()` y `useCart()`, que por dentro usan `useSelector` / `useDispatch` y devuelven lo mismo que devolvían los Context. Las acciones devuelven una promesa (`unwrap()`), así que en la pantalla se sigue haciendo `try { await agregar(id) } catch (err) { ... }`.
 
 El estado de cada pantalla (formularios, mensajes, cantidad elegida, método de pago) sigue en `useState`: solo va a Redux lo que se comparte entre pantallas.
+
+El backend de la rama `feature/add-cookie` establece el JWT en una cookie `HttpOnly` durante login/registro. El frontend no lee ni guarda el JWT: el navegador adjunta la cookie a las peticiones autenticadas (`credentials: "include"`). Al iniciar, `/api/auth/me` restaura los datos del usuario en Redux y `/api/auth/logout` vence la cookie. En el primer inicio también se elimina el token legado de la clave `sesion` en `localStorage`, sin leerlo. La cookie `HttpOnly` reduce la exposición del JWT ante XSS, y `index.html` añade una CSP que bloquea scripts inline y scripts de otros orígenes. El contenido de la API se muestra con JSX (que escapa texto) y no se encontraron inserciones de HTML crudo en el frontend. No hay preferencias configurables de tema o idioma en la app para persistir.
 
 ## Panel admin
 
