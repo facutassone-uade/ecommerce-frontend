@@ -102,7 +102,8 @@ function Cart() {
         )}
       </div>
 
-      {mensajeError && (
+      {/* Si la sesión venció a mitad de una operación, el 401 ya se muestra como "Iniciá sesión" */}
+      {mensajeError && usuario && (
         <Alert variant="destructive" className="mb-4">
           <AlertDescription>{mensajeError}</AlertDescription>
         </Alert>
